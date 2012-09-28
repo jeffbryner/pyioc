@@ -1,0 +1,7 @@
+Taken from http://fusionsecurity.blogspot.com/2011/08/updated-dead-simple-certificate.html
+
+./simpleca.sh pyiocserver
+
+will create a ca and certs for a sample pyiocserver.
+
+copy pyiocserver.crt to pyiocserver.pem before running the pyiocserver.

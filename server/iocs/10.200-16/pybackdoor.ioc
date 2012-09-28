@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<ioc xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" id="49c3840c-b3c9-4290-8c3c-cbd3a8a488ca" last-modified="2012-09-26T18:22:27" xmlns="http://schemas.mandiant.com/2010/ioc">
+  <short_description>pybackdoor</short_description>
+  <description>find the python backdoor</description>
+  <authored_by>jeff bryner</authored_by>
+  <authored_date>2012-09-21T23:38:59</authored_date>
+  <links />
+  <definition>
+    <Indicator operator="OR" id="62b8f115-299d-482f-904d-a2a0dd7bf65b">
+      <IndicatorItem id="6e8807d8-8e06-40fa-bdf2-102abba72533" condition="contains">
+        <Context document="FileItem" search="FileItem/FullPath" type="mir" />
+        <Content type="string">pyshell.exe</Content>
+      </IndicatorItem>
+      <Indicator operator="AND" id="6e6030a2-835a-4bc3-9d93-48c41f238ede">
+        <IndicatorItem id="211d1e48-3807-4045-bd9b-50be1f3a2356" condition="is">
+          <Context document="FileItem" search="FileItem/Md5sum" type="mir" />
+          <Content type="md5">c23961d254244065436ad538e61754e9</Content>
+        </IndicatorItem>
+      </Indicator>
+      <Indicator operator="OR" id="e06fcf56-9158-44fe-b6d4-1df583807e55">
+        <IndicatorItem id="17bd7023-0053-44b1-8775-c1e0cb04fcb3" condition="contains">
+          <Context document="PortItem" search="PortItem/localPort" type="mir" />
+          <Content type="string">4444</Content>
+        </IndicatorItem>
+      </Indicator>
+    </Indicator>
+  </definition>
+</ioc>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<ioc xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" id="2bbd1a2d-7c83-4558-98b3-d922c61d8327" last-modified="2012-09-11T17:47:30" xmlns="http://schemas.mandiant.com/2010/ioc">
+  <short_description>python backdoor</short_description>
+  <description>find the python backdoor</description>
+  <authored_by>jeff bryner</authored_by>
+  <authored_date>2012-09-05T21:01:25</authored_date>
+  <links />
+  <definition>
+    <Indicator operator="OR">
+      <IndicatorItem id="b8d0f56b-7962-4022-9436-67b3fa4fa54e" condition="contains">
+        <Context document="FileItem" search="FileItem/FullPath" type="mir" />
+        <Content type="string">bindmeterpreter.exe</Content>
+      </IndicatorItem>
+      <Indicator operator="AND" id="ac17a16a-cbbc-4df5-9063-3c1def8b3423">
+        <IndicatorItem id="e1ac322b-5b96-498f-b99d-d7b741555cd8" condition="is">
+          <Context document="FileItem" search="FileItem/Md5sum" type="mir" />
+          <Content type="md5">ad3c1b81eab9b36a3517b67df8f92bcb</Content>
+        </IndicatorItem>
+      </Indicator>
+    </Indicator>
+  </definition>
+</ioc>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<ioc xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" id="02e55e2a-0dd6-4a9f-9ce0-c8bc7db8aad4" last-modified="2012-08-14T21:51:55" xmlns="http://schemas.mandiant.com/2010/ioc">
+  <short_description>firefox running</short_description>
+  <description>Is firefox in the list of running processes</description>
+  <authored_by>jab</authored_by>
+  <authored_date>2012-08-14T21:46:51</authored_date>
+  <links />
+  <definition>
+    <Indicator operator="OR">
+      <IndicatorItem id="f657f60f-3418-4e1e-87a0-97e234d4d806" condition="contains">
+        <Context document="ProcessItem" search="ProcessItem/name" type="mir" />
+        <Content type="string">firefox</Content>
+      </IndicatorItem>
+    </Indicator>
+  </definition>
+</ioc>

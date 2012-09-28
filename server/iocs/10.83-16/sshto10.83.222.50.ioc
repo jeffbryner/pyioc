@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<ioc xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" id="3a632b45-5c5d-49ae-a149-a2c5ce72a7d0" last-modified="2012-08-15T21:54:57" xmlns="http://schemas.mandiant.com/2010/ioc">
+  <short_description>ssh to 10.83.222.50</short_description>
+  <description>ssh to 10.83.222.50</description>
+  <authored_by>jab</authored_by>
+  <authored_date>2012-08-15T21:53:42</authored_date>
+  <links />
+  <definition>
+    <Indicator operator="OR">
+      <IndicatorItem id="37803c64-4f34-4d75-985a-ba0e8cf37354" condition="contains">
+        <Context document="ProcessItem" search="ProcessItem/PortList/PortItem/remoteIP" type="mir" />
+        <Content type="string">10.83.222.50</Content>
+      </IndicatorItem>
+      <Indicator operator="AND" id="5ddd60f7-b03e-4fdd-a98e-8f0b8bd78ac1">
+        <IndicatorItem id="7d5a185e-d7d4-40a0-817a-9ada75ee0f1f" condition="contains">
+          <Context document="ProcessItem" search="ProcessItem/PortList/PortItem/localPort" type="mir" />
+          <Content type="string">22</Content>
+        </IndicatorItem>
+      </Indicator>
+    </Indicator>
+  </definition>
+</ioc>
