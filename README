@@ -50,3 +50,21 @@ win64
         pyinstaller:                    http://www.pyinstaller.org/
 
 Native builds for various platforms can be found in the builds directory.
+
+Notes on Setup for the server:
+It expects several subdirectories to exist: 
+./certs
+./confs
+./iocs
+
+./certs should contain at least: 
+	ca.crt
+	pyiocserver.pem
+	pyiocserver.key
+which you can create using the simpleca.sh script, use the default from github (note the risk that you're using a publically 
+available 'private' key) or ideally; use your internal CA.
+
+The confs directory is your chance to issue configuration files to pyiocClients in real time. 
+The iocs directory is where you create netblocks (./iocs/172.21-16 for example) and publish .ioc files you want the clients to 
+process.
+
