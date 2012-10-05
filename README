@@ -29,7 +29,7 @@ Client:
         SOAPpy
         M2Crypto
         psutil          
-        lxml v2.3.2 ( pip install lml==2.3.2 )
+        lxml v2.3.2 ( pip install lxml==2.3.2 )
 	regobj
 
 Server: 

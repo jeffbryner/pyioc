@@ -50,22 +50,30 @@ def confList(ipaddress):
     #looks lin conf Directory for subdirectories corresponding to netblock cidr masks
     #i.e. ./conf/172.21.1.0-24 will contain conf files meant for clients in the 172.21.1.0/24 cidr range.
     logEntry('checking conf files for ip: %s'%(ipaddress))
-    netdirs=os.listdir(confDirectory)
+    netdirs=[]
+    confsList=[]
+    if os.path.exists(confDirectory):
+        netdirs=os.listdir(confDirectory)        
     try: 
-        confsList=[]
         for net in netdirs:
             if IPAddress(ipaddress) in IPNetwork(net.replace('-','/')):
                 confFiles=os.listdir(confDirectory + os.sep + net)
                 for confFile in confFiles:
                     conf={}
-                    conf['filename']=confFile
-                    conf['sha1hash']=hashfile(confDirectory + os.sep + net + os.sep + confFile)
-                    confsList.append(conf)
-
-        return confsList
+                    if '.conf' in confFile:
+                        conf['filename']=confFile
+                        conf['sha1hash']=hashfile(confDirectory + os.sep + net + os.sep + confFile)
+                        confsList.append(conf)
     except ValueError as e: 
         #catches bad dir names that don't resolve to IP networks.
+        logEntry(e)
         pass
+    except AddrFormatError as e:
+        #catches bad dir names that don't resolve to IP networks.
+        logEntry(e)
+        pass
+    return confsList
+    
     
 def getConfFile(filename,ipaddress):
     '''returns a base64 encode of the conffile contents'''
@@ -89,22 +97,31 @@ def iocList(ipaddress):
     #looks lin iocDirectory for subdirectories corresponding to netblock cidr masks
     #i.e. ./iocs/172.21.1.0-24 will contain ioc files meant for clients in the 172.21.1.0/24 cidr range.
     logEntry('checking iocs for ip: %s'%(ipaddress))
-    netdirs=os.listdir(iocDirectory)
+    netdirs=[]
+    iocsList=[]
+    if os.path.exists(iocDirectory):
+        netdirs=os.listdir(iocDirectory)     
     try: 
-        iocList=[]
         for net in netdirs:
             if IPAddress(ipaddress) in IPNetwork(net.replace('-','/')):
                 iocFiles=os.listdir(iocDirectory + os.sep + net)
                 for iocFile in iocFiles:
                     ioc={}
-                    ioc['filename']=iocFile
-                    ioc['sha1hash']=hashfile(iocDirectory + os.sep + net + os.sep + iocFile)
-                    iocList.append(ioc)
-
-        return iocList
+                    if '.ioc' in iocFile:
+                        ioc['filename']=iocFile
+                        ioc['sha1hash']=hashfile(iocDirectory + os.sep + net + os.sep + iocFile)
+                        iocsList.append(ioc)
     except ValueError as e: 
         #catches bad dir names that don't resolve to IP networks.
+        logEntry(e)
         pass
+    except AddrFormatError as e:
+        #catches bad dir names that don't resolve to IP networks.
+        logEntry(e)
+        pass
+    return iocsList
+
+
 
 def getIOCFile(filename,ipaddress):
     '''returns a base64 encode of the IOC file contents'''
