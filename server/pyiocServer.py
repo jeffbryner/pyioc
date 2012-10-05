@@ -3,7 +3,7 @@ from SOAPpy import ThreadingSOAPServer
 import logging
 from M2Crypto import SSL
 from glob import glob
-import os
+import os,sys
 from netaddr import * 
 from hashlib import sha1
 from base64 import b64encode
@@ -144,12 +144,28 @@ def iocResult(ipaddress,iocResult):
     logEntry('%s returned %s'%(ipaddress,iocResult))
 
 if __name__ == "__main__":
-    logging.info("starting SOAP server on 8443")
-    ctx = SSL.Context('sslv23')
-    ctx.load_verify_locations('certs/ca.crt')
-    ctx.load_cert(certfile='certs/pyiocserver.pem',keyfile='certs/pyiocserver.key')#pem cert file
+    parser = OptionParser()
+    parser.add_option("-p", "--port", dest='port'  , default=8443, type="int", help="TCP Port to listen on")
+    parser.add_option("-i", "--ip", dest='ipaddress' , default="0.0.0.0", help="IP Address to listen on (all IPs by default)")
+    parser.add_option("-d", "--debug",action="store_true", dest="debug", default=False, help="turn on debugging output")    
+
+    (options,args) = parser.parse_args()    
     
-    server = ThreadingSOAPServer(("0.0.0.0", 8443),ssl_context=ctx)
+    
+    logging.info("starting SOAP server on %s" %(options.port))
+    ctx = SSL.Context('sslv23')
+    
+    try:
+        ctx.load_verify_locations('certs/ca.crt')
+        ctx.load_cert(certfile='certs/pyiocserver.pem',keyfile='certs/pyiocserver.key')#pem cert file
+    except SSL.SSLError as e:
+        sys.stderr.write("Error loading SSL Certs: %s\n"%(e))
+        sys.stderr.write("Server expects a ./certs directory with pyiocserver.pem,pyiocserver.key and ca.crt files\n")
+        sys.stderr.write("You can create simple certs using the 'simpleca.sh' script included with the pyioc distribution\n")
+        sys.stderr.write("example: ./simpleca.sh pyiocserver\n")
+        sys.exit(1)
+    
+    server = ThreadingSOAPServer((options.ipaddress, options.port),ssl_context=ctx)
     server.registerFunction(logEntry)
     server.registerFunction(iocList)
     server.registerFunction(getIOCFile)
