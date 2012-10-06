@@ -8,7 +8,8 @@ from lib.settings import DIRECTORYRECURSELIMIT
 from lib import log
 from lib.log import debug,critical,error,info
 from time import sleep
-from hashlib import md5, sha1
+from hashlib import md5, sha1, sha256
+from lib import util
 
 
 def fullpath(searchString,cacheItems=[],cache=False):
@@ -115,5 +116,38 @@ def md5sum(searchString,cacheItems=[],cache=False):
         finally:
             f.close()
         if hash.hexdigest()==searchString:
+            return True
+    return False
+
+
+def sha1sum(searchString,cacheItems=[],cache=False):
+    for afile in cacheItems:
+        hash = sha1()    
+        f = open(afile, 'rb')
+        try:
+            hash.update(f.read())
+        finally:
+            f.close()
+        if hash.hexdigest()==searchString:
+            return True
+    return False
+
+def sha256sum(searchString,cacheItems=[],cache=False):
+    for afile in cacheItems:
+        hash = sha256()    
+        f = open(afile, 'rb')
+        try:
+            hash.update(f.read())
+        finally:
+            f.close()
+        if hash.hexdigest()==searchString:
+            return True
+    return False
+
+def sizeinbytes(searchString,cacheItems=[],cache=False):
+    if not util.is_number(searchString):
+        return False
+    for afile in cacheItems:
+        if long(os.path.getsize(afile))==long(searchString):
             return True
     return False
