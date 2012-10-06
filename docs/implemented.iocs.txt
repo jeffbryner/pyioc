@@ -8,6 +8,10 @@ ProcessItem/pid
 FileItem/FileName
 FileItem/FullPath
 FileItem/Md5sum
+FileItem/sha1sum
+FileItem/sha256sum
+FileItem/sizeinbytes
+
 
 RegistryItem/path
 RegistryItem/value
