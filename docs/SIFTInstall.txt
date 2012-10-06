@@ -1,0 +1,25 @@
+#Step by step commands to get a pyioc server working on the SANS SIFT forensic workstation: 
+
+#fix ssh on the SIFT VM:
+	ssh-keygen -t dsa -f /etc/ssh/ssh_host_dsa_key
+	/etc/init.d/ssh start
+#ssh into SIFT VM	
+	ssh root@<vmip>
+#fixup python: 
+	wget http://pypi.python.org/packages/source/p/pip/pip-1.2.1.tar.gz
+	tar -xvzf pip-1.2.1.tar.gz
+	cd pip-1.2.1/
+	python setup.py install
+	pip install SOAPpy
+	pip install M2Crypto
+	pip install psutil
+	pip install lxml==2.3.2
+	pip install netaddr
+
+#get pyioc: 
+	cd ~
+	wget https://github.com/jeffbryner/pyioc/zipball/master -O pyioc.zip
+	unzip pyioc.zip
+	cd jeffbryner*
+	cd server
+	./pyiocServer.py
