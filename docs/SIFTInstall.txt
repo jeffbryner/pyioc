@@ -6,7 +6,7 @@
 #ssh into SIFT VM	
 	ssh root@<vmip>
 
-#If SIFT <v2.14 fix libraries
+#get xml system libraries
 	apt-get install libxslt1-dev
 
 #fixup python: 
