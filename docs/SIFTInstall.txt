@@ -1,10 +1,14 @@
-#Step by step commands to get a pyioc server working on the SANS SIFT forensic workstation: 
+#Step by step commands to get a pyioc server working on the SANS SIFT forensic workstation v2.14: 
 
 #fix ssh on the SIFT VM:
 	ssh-keygen -t dsa -f /etc/ssh/ssh_host_dsa_key
 	/etc/init.d/ssh start
 #ssh into SIFT VM	
 	ssh root@<vmip>
+
+#If SIFT <v2.14 fix libraries
+	apt-get install libxslt1-dev
+
 #fixup python: 
 	wget http://pypi.python.org/packages/source/p/pip/pip-1.2.1.tar.gz
 	tar -xvzf pip-1.2.1.tar.gz
