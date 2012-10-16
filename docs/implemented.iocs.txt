@@ -1,10 +1,3 @@
-ProcessItem/PortList/PortItem/localPort
-ProcessItem/PortList/PortItem/remoteIP
-ProcessItem/PortList/PortItem/remotePort
-ProcessItem/Username
-ProcessItem/name
-ProcessItem/pid
-
 FileItem/FileName
 FileItem/FullPath
 FileItem/Md5sum
@@ -12,11 +5,17 @@ FileItem/sha1sum
 FileItem/sha256sum
 FileItem/sizeinbytes
 
+PortItem/localport
+PortItem/remoteip
+PortItem/remoteport
+
+ProcessItem/PortList/PortItem/localPort
+ProcessItem/PortList/PortItem/remoteIP
+ProcessItem/PortList/PortItem/remotePort
+ProcessItem/Username
+ProcessItem/name
+ProcessItem/pid
 
 RegistryItem/path
 RegistryItem/value
 RegistryItem/valuename
-
-PortItem/localport
-PortItem/remoteport
-PortItem/remoteip
