@@ -1,9 +1,26 @@
 FileItem/FileName
 FileItem/FullPath
+FileItem/FilePath
 FileItem/Md5sum
 FileItem/sha1sum
 FileItem/sha256sum
 FileItem/sizeinbytes
+FileItem/FileExtension
+FileItem/PEInfo/PETimeStamp
+FileItem/PEInfo/DetectedAnomalies/string
+FileItem/PEInfo/Sections/Section/Name
+FileItem/PEInfo/Exports/DllName
+FileItem/PEInfo/Exports/ExportedFunctions/string
+FileItem/PEInfo/Type
+FileItem/StringList/string
+FileItem/PEInfo/VersionInfoList/VersionInfoItem/FileDescription
+FileItem/PEInfo/VersionInfoList/VersionInfoItem/OriginalFilename
+FileItem/PEInfo/VersionInfoList/VersionInfoItem/ProductName
+FileItem/PEInfo/VersionInfoList/VersionInfoItem/InternalName
+FileItem/PEInfo/VersionInfoList/VersionInfoItem/CompanyName
+FileItem/PEInfo/VersionInfoList/VersionInfoItem/LegalCopyright
+FileItem/PEInfo/VersionInfoList/VersionInfoItem/FileVersion
+FileItem/PEInfo/VersionInfoList/VersionInfoItem/Language
 
 PortItem/localport
 PortItem/remoteip
@@ -15,7 +32,10 @@ ProcessItem/PortList/PortItem/remotePort
 ProcessItem/Username
 ProcessItem/name
 ProcessItem/pid
+ProcessItem/path
 
 RegistryItem/path
 RegistryItem/value
 RegistryItem/valuename
+RegistryItem/text
+

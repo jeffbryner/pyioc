@@ -18,6 +18,17 @@ def name(searchString):
             error("Must run this as root/administrator to get process connection information\n")
     return False
 
+def path(searchString):
+    searchString=str(searchString).lower()
+    for process in psutil.process_iter():
+        try:
+            if searchString in str(process.cmdline).lower():
+                return True
+        except psutil.error.NoSuchProcess as e:
+            continue
+        except psutil.error.AccessDenied as e:
+            error("Must run this as root/administrator to get process connection information\n")
+    return False
 
 def pid(searchString):
     searchString=str(searchString).lower()
@@ -43,7 +54,7 @@ def username(searchString):
             error("Must run this as root/administrator to get process connection information\n")
     return False
 
-def localport(searchString):
+def portlistportitemlocalport(searchString):
     searchString=str(searchString).lower()
     for process in psutil.process_iter():
         try:
@@ -56,7 +67,7 @@ def localport(searchString):
             error("Must run this as root/administrator to get process connection information\n")
     return False
 
-def remoteip(searchString):
+def portlistportitemremoteip(searchString):
     searchString=str(searchString).lower()
     for process in psutil.process_iter():
         try:
@@ -69,7 +80,7 @@ def remoteip(searchString):
             error("Must run this as root/administrator to get process connection information\n")
     return False
     
-def remoteport(searchString):
+def portlistportitemremoteport(searchString):
     searchString=str(searchString).lower()
     for process in psutil.process_iter():
         try:

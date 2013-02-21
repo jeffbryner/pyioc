@@ -1,5 +1,6 @@
 #!/usr/bin/python2
 #utility functions for all modules
+from dateutil import parser
 
 def is_number(s):
     'check if string is numeric, return bool'
@@ -12,6 +13,14 @@ def is_number(s):
             return False
     return True
 
+def is_date(s):
+    """check if param is a date, return bool"""
+    try:
+        parser.parse(s)
+    except ValueError:
+        return False
+    return True
+    
 
 def numericValue(lit):
     'Return value of numeric literal string or ValueError exception'

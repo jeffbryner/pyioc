@@ -45,9 +45,27 @@ def hashfile(filepath):
         f.close()
     return sha1hash.hexdigest()
 
+def fillFileCache(root):
+    """See if we have a file name or directory in our .ioc file we can use to narrow the files we search
+       and fill our cache of file names for future ioc queries"""
+    global cacheItems, cache
+    for ii in root.findall("//*[local-name()='IndicatorItem']"):
+        if 'fileitem/filename' in ii.Context.attrib.get("search").lower():
+            cache=True
+            FileItem.filename(ii.Content,cacheItems,True)
+        if 'fileitem/fullpath' in ii.Context.attrib.get("search").lower():
+            cache=True
+            FileItem.fullpath(ii.Content,cacheItems,True)        
+        if 'fileitem/filepath' in ii.Context.attrib.get("search").lower():
+            cache=True
+            FileItem.filepath(ii.Content,cacheItems,True)        
+            
+    
+    
 def processIOCFile(filename):
     ioco=lxml.objectify.parse(filename)
-    root=ioco.getroot()    
+    root=ioco.getroot()
+    fillFileCache(root)
     for Indicator in root.findall("//*[local-name()='Indicator']")[0]:
         walkIndicator(Indicator)    
 
@@ -75,7 +93,12 @@ def walkIndicatorItems(ind):
         #split it into category/attribute
         itemTarget=i.Context.attrib.get("search")        
         iocMajorCategory=itemTarget.split('/')[0]
-        iocAttribute=itemTarget.split('/')[-1]
+        #iocAttribute=itemTarget.split('/')[-1]
+        #Under the major category, concat all the attributes into one function name
+        #to see if we know how to handle it.
+        #i.e. FileItem/PEInfo/ImportedModules/Module/ImportedFunctions/string
+        #becomes PEInfoImportedModulesModuleImportedFunctionsstring
+        iocAttribute=''.join(itemTarget.split('/')[1:])
         #some ioc attributes are all lower, 1 upper, then lower, camel case, etc..normalize to lower case.
         iocAttribute=iocAttribute.lower()
         #optimistic result default. change if you are pessimistic ;-]
@@ -95,6 +118,10 @@ def walkIndicatorItems(ind):
                 else:
                     #iocResult=eval(iocMajorCategory + '.' + iocAttribute + '("' + str(i.Content) + '")')
                     iocResult=eval("%s.%s(r'%s')" %(iocMajorCategory,iocAttribute,i.Content))
+                
+                #was this a condition testing false? i.e. isnot
+                if 'not' in i.attrib.get("condition").lower() and iocResult==True:
+                    iocResult= not iocResult
             else:
                 debug('cannot evaluate %s'%( (iocMajorCategory + '.' + iocAttribute + '("' + str(i.Content) + '")')))
         else:
@@ -127,11 +154,13 @@ def walkIndicator(ind):
         #don't add a logic operator as the starting point..python won't eval 'or (True)'
         if len(iocEvalString)==0:
             iocEvalString += ' ('
+        elif iocEvalString.strip().endswith("("):
+            iocEvalString+=' ('
         else:
             iocEvalString += ' ' + logicOperator + ' ('            
         walkIndicator(i)
         level-=1
-        cacheItems=[]
+        #cacheItems=[]
         debug('\t'*level + ' )')
         iocEvalString += ' )'
 
@@ -232,6 +261,8 @@ if __name__ == "__main__":
     
     for ioc in server.iocList(myip):
         debug('got ioc: %s'%(ioc))
+        #clear any files,registry entries we may have cached from the last ioc
+        cacheItems=[]
         iocContent=server.getIOCFile(ioc['filename'],myip)
         iocFileHandle, iocFileName =tempfile.mkstemp(suffix="ioc",dir=iocDir,text=True)
         iocFile=os.fdopen(iocFileHandle,'w+')

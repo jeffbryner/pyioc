@@ -67,8 +67,21 @@ def valuename(searchString,cacheItems=[],cache=False):
     return hits
 
 def value(searchString,cacheItems=[],cache=False):
+    """unclear what the difference is between registryitem/value and registryitem/text..so they are the same here"""    
     hits=False
     debug("value values %s %s"%(searchString,str(cacheItems)))
+    for akey in cacheItems:
+        rootKey,subKey=parseRegString(akey)
+        subKeyValues=[str(k.data) for k in rootKey(subKey).values()]
+        debug('SubKeyValues are %s'%(str(subKeyValues)))
+        if searchString in subKeyValues:
+            hits=True
+    return hits
+
+def text(searchString,cacheItems=[],cache=False):
+    """unclear what the difference is between registryitem/value and registryitem/text..so they are the same here"""
+    hits=False
+    debug("text values %s %s"%(searchString,str(cacheItems)))
     for akey in cacheItems:
         rootKey,subKey=parseRegString(akey)
         subKeyValues=[str(k.data) for k in rootKey(subKey).values()]
