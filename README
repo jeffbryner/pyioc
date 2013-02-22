@@ -31,6 +31,9 @@ Client:
         psutil          
         lxml v2.3.2 ( pip install lxml==2.3.2 )
 	regobj
+	pefile
+	python-magic
+	python-dateutil
 
 Server: 
         SOAPpy
