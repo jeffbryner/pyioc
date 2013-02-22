@@ -11,11 +11,14 @@ from time import sleep
 from hashlib import md5, sha1, sha256
 from lib import util
 import pefile
-import magic
 import time
 import datetime
 from dateutil import parser
-
+try:
+    import magic
+except ImportError:
+    pass
+    
 def fullpath(searchString,cacheItems=[],cache=False):
     """
     either a full file path for condition="is" or 
@@ -284,15 +287,16 @@ def peinfoexportsexportedfunctionsstring(searchString,cacheItems=[],cache=False)
     return False    
 
 def peinfotype(searchString,cacheItems=[],cache=False):
-    for afile in cacheItems:
-        try:
-            FILE = open(afile, "rb")
-            data = FILE.read()
-            FILE.close()
-            if searchString in magic.from_buffer(data):
-                return True
-        except:
-            continue
+    if sys.modules.has_key('magic'):    
+        for afile in cacheItems:
+            try:
+                FILE = open(afile, "rb")
+                data = FILE.read()
+                FILE.close()
+                if searchString in magic.from_buffer(data):
+                    return True
+            except:
+                continue
     return False    
     
     
