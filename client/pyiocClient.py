@@ -48,17 +48,17 @@ def hashfile(filepath):
 def fillFileCache(root):
     """See if we have a file name or directory in our .ioc file we can use to narrow the files we search
        and fill our cache of file names for future ioc queries"""
-    global cacheItems, cache
+    global fileCacheItems, cache
     for ii in root.findall("//*[local-name()='IndicatorItem']"):
         if 'fileitem/filename' in ii.Context.attrib.get("search").lower():
             cache=True
-            FileItem.filename(ii.Content,cacheItems,True)
+            FileItem.filename(ii.Content,fileCacheItems,True)
         if 'fileitem/fullpath' in ii.Context.attrib.get("search").lower():
             cache=True
-            FileItem.fullpath(ii.Content,cacheItems,True)        
+            FileItem.fullpath(ii.Content,fileCacheItems,True)        
         if 'fileitem/filepath' in ii.Context.attrib.get("search").lower():
             cache=True
-            FileItem.filepath(ii.Content,cacheItems,True)        
+            FileItem.filepath(ii.Content,fileCacheItems,True)        
             
     
     
@@ -78,7 +78,7 @@ def walksearches(ind):
     return searches
 
 def walkIndicatorItems(ind):
-    global level,iocEvalString, cacheItems
+    global level,iocEvalString, fileCacheItems,regCacheItems
     cache=False
 
     lastii=ind.findall("./*[local-name()='IndicatorItem']")[-1]
@@ -109,9 +109,13 @@ def walkIndicatorItems(ind):
                 #tell the function about items we've cached? 
                 if 'cacheItems' in eval(iocMajorCategory + '.' + iocAttribute + '.func_code.co_varnames'):
                     #iocResult=eval(iocMajorCategory + '.' + iocAttribute + '("' + str(i.Content) + '")')
-                    if cache:
-                        iocResult=eval("%s.%s(r'%s',cacheItems,True)" %(iocMajorCategory,iocAttribute,i.Content))
-                        debug('cache items: %s' %(str(cacheItems)))
+                    if cache and iocMajorCategory=="FileItem":
+                        iocResult=eval("%s.%s(r'%s',fileCacheItems,True)" %(iocMajorCategory,iocAttribute,i.Content))
+                        debug('cache items: %s' %(str(fileCacheItems)))
+                    elif cache and iocMajorCategory=="RegistryItem":
+                        iocResult=eval("%s.%s(r'%s',regCacheItems,True)" %(iocMajorCategory,iocAttribute,i.Content))
+                        debug('cache items: %s' %(str(regCacheItems)))
+                        
                     else:
                         iocResult=eval("%s.%s(r'%s',[],False)" %(iocMajorCategory,iocAttribute,i.Content))
 
@@ -140,7 +144,7 @@ def walkIndicatorItems(ind):
 
 
 def walkIndicator(ind):
-    global level,iocEvalString,cacheItems    
+    global level,iocEvalString,fileCacheItems,regCacheItems
     #walk any indicator items first: 
     if len(ind.findall("./*[local-name()='IndicatorItem']"))>0:
         walkIndicatorItems(ind)     
@@ -219,7 +223,8 @@ def setPriority():
 if __name__ == "__main__":
 
     level=1
-    cacheItems=[]
+    fileCacheItems=[]
+    regCacheItems=[]
     iocEvalString=""
     parser = OptionParser()
     parser.add_option("-s", dest='iocServer'   , default='127.0.0.1', help="name or IP address of IOC Server")
@@ -262,7 +267,8 @@ if __name__ == "__main__":
     for ioc in server.iocList(myip):
         debug('got ioc: %s'%(ioc))
         #clear any files,registry entries we may have cached from the last ioc
-        cacheItems=[]
+        fileCacheItems=[]
+        regCacheItems=[]
         iocContent=server.getIOCFile(ioc['filename'],myip)
         iocFileHandle, iocFileName =tempfile.mkstemp(suffix="ioc",dir=iocDir,text=True)
         iocFile=os.fdopen(iocFileHandle,'w+')
