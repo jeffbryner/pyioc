@@ -109,19 +109,24 @@ def walkIndicatorItems(ind):
                 #tell the function about items we've cached? 
                 if 'cacheItems' in eval(iocMajorCategory + '.' + iocAttribute + '.func_code.co_varnames'):
                     #iocResult=eval(iocMajorCategory + '.' + iocAttribute + '("' + str(i.Content) + '")')
+                    #python hates trailing backslashes, strip it off
+                    sContent=i.Content.text
+                    if sContent[-1]=='\\':
+                        sContent=sContent[:len(sContent)-1]
+                        
                     if cache and iocMajorCategory=="FileItem":
-                        iocResult=eval("%s.%s(r'%s',fileCacheItems,True)" %(iocMajorCategory,iocAttribute,i.Content))
+                        iocResult=eval("%s.%s('%s',fileCacheItems,True)" %(iocMajorCategory,iocAttribute,sContent))
                         debug('cache items: %s' %(str(fileCacheItems)))
                     elif cache and iocMajorCategory=="RegistryItem":
-                        iocResult=eval("%s.%s(r'%s',regCacheItems,True)" %(iocMajorCategory,iocAttribute,i.Content))
+                        iocResult=eval("%s.%s('%s',regCacheItems,True)" %(iocMajorCategory,iocAttribute,sContent))
                         debug('cache items: %s' %(str(regCacheItems)))
                         
                     else:
-                        iocResult=eval("%s.%s(r'%s',[],False)" %(iocMajorCategory,iocAttribute,i.Content))
+                        iocResult=eval("%s.%s(r'%s',[],False)" %(iocMajorCategory,iocAttribute,sContent))
 
                 else:
                     #iocResult=eval(iocMajorCategory + '.' + iocAttribute + '("' + str(i.Content) + '")')
-                    iocResult=eval("%s.%s(r'%s')" %(iocMajorCategory,iocAttribute,i.Content))
+                    iocResult=eval("%s.%s(r'%s')" %(iocMajorCategory,iocAttribute,i.Content.text))
                 
                 #was this a condition testing false? i.e. isnot
                 if 'not' in i.attrib.get("condition").lower() and iocResult==True:
