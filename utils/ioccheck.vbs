@@ -44,6 +44,7 @@ strIOCPort = "8443"
 strDistServer = "dist.example.com"
 strDistPort = "80"
 
+' destination file in the target system
 strIOCClientPath = "c:\pyioc.exe"
 
 On Error Resume Next
