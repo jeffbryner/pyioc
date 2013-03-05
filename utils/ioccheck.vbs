@@ -117,13 +117,8 @@ End Function
 
 Sub fetchURL(sFileURL, sLocation)
  
-	'create xmlhttp object
 	Set objXMLHTTP = CreateObject("MSXML2.XMLHTTP")
- 
-	'get the remote file
 	objXMLHTTP.open "GET", sFileURL, false
- 
-	'send the request
 	objXMLHTTP.send()
  
 	'wait until the data has downloaded successfully
@@ -132,34 +127,24 @@ Sub fetchURL(sFileURL, sLocation)
 	'if the data has downloaded sucessfully
 	If ((objXMLHTTP.Status = 200) And (sLocation <> "")) Then
  
-    	'create binary stream object
 		Set objADOStream = CreateObject("ADODB.Stream")
 		objADOStream.Open
  
-	    'adTypeBinary
 		objADOStream.Type = 1
 		objADOStream.Write objXMLHTTP.ResponseBody
- 
-	    'Set the stream position to the start
 		objADOStream.Position = 0    
  
-        'create file system object to allow the script to check for an existing file
-        Set objFSO = Createobject("Scripting.FileSystemObject")
+	        'create file system object to allow the script to check for an existing file
+        	Set objFSO = Createobject("Scripting.FileSystemObject")
 
-        'check if the file exists, if it exists then delete it
+        	'check if the file exists, if it exists then delete it
 		If objFSO.Fileexists(sLocation) Then objFSO.DeleteFile sLocation
+ 		Set objFSO = Nothing
  
-	    'destroy file system object	
-		Set objFSO = Nothing
- 
-	    'save the ado stream to a file
+	    	'save the ado stream to a file
 		objADOStream.SaveToFile sLocation
- 
-	    'close the ado stream
-		objADOStream.Close
- 
-		'destroy the ado stream object
-		Set objADOStream = Nothing
+ 		objADOStream.Close
+ 		Set objADOStream = Nothing
  
 	End if
  
