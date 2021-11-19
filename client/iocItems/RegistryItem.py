@@ -39,7 +39,7 @@ def path(searchString,cacheItems=[],cache=False):
     """
     hits=False   
     if PLATFORM!='win':
-        #no registy 
+        #no registry 
         hits=False
     
     else:
